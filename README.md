@@ -2,7 +2,7 @@
 
 Before completing any of the review questions below, ensure that you have answered each question in the previous labs.
 
-## Question 1
+## Question 1 - done
 
 Given the following excerpt from the Declaration of Independence, find the most frequent word that is longer than 5 characters.
 
@@ -37,27 +37,62 @@ Britain is a history of repeated injuries and usurpations, all having in direct 
 establishment of an absolute Tyranny over these States. To prove this, let Facts be submitted to a
 candid world.
 """
+var noPunct = ""
+for i in declarationOfIndependence {
+if i != "." && i != "," && i != ";" {
+noPunct.append(i)
+}
+}
+
+var newArray = noPunct.components(separatedBy: " ")
+
+print(newArray)
 ```
 
-## Question 2
+## Question 2 - done
 
 Make an array that contains all elements that appear more than twice in someRepeatsAgain.
 
 
 ```swift
 var someRepeatsAgain = [25,11,30,31,50,28,4,37,13,20,24,38,28,14,44,33,7,43,39,35,36,42,1,40,7,14,23,46,21,39,11,42,12,38,41,48,20,23,29,24,50,41,38,23,11,30,50,13,13,16,10,8,3,43,10,20,28,39,24,36,21,13,40,25,37,39,31,4,46,20,38,2,7,11,11,41,45,9,49,31,38,23,41,16,49,29,14,6,6,11,5,39,13,17,43,1,1,15,25]
+
+let duplicates = Array(Set(someRepeatsAgain.filter({ (i) in someRepeatsAgain.filter({ $0 == i }).count > 2})))
+
+print(duplicates)
 ```
 
-## Question 3
+## Question 3 - done
 
 Identify if there are 3 integers in the following array that sum to 10. If so, print them. If there are multiple triplets, print all possible triplets.
 
 ```swift
 var tripleSumArr = [-20,-14, -8,-5,-3,-2,1,2,3,4,9,15,20,30]
+
+
+func findTriplets(arr: [Int],sum: Int) -> [[Int]]{
+var triplets: [[Int]] = []
+for i in arr {
+for j in arr{
+for k in arr {
+if j + k + i == sum {
+triplets.append([j,k,i])
+}
+}
+
+}
+
+}
+return(triplets)
+}
+print(findTriplets(arr: tripleSumArr, sum: 10))
+
+//if there is a way to do this with closures i would love to know
+
 ```
 
 
-## Question 3
+## Question 3...again? - done
 
 ```swift
 let letterValues = [
@@ -92,13 +127,64 @@ let letterValues = [
 
 a. Sort the string below in descending order according the dictionary letterValues
 var codeString = "aldfjaekwjnfaekjnf"
+```
+var codeArr: [Int] = []
+
+for i in codeString {
+let strI = String(i)
+codeArr.append(letterValues[strI] ?? 0)
+}
+let sorted = codeArr.sorted { (int1, int2) -> Bool in
+return int1 > int2
+}
+var newStr = ""
+
+var reversedDict = [Int: String]()
+
+for (k,v) in letterValues {
+reversedDict[v] = k
+}
+
+for i in sorted {
+newStr.append(reversedDict[i]!)
+}
+print(newStr)
+```
 
 
 b. Sort the string below in ascending order according the dictionary letterValues
 var codeStringTwo = "znwemnrfewpiqn"
+```var codeArr: [Int] = []
+
+for i in codeString {
+let strI = String(i)
+codeArr.append(letterValues[strI] ?? 0)
+}
+print(codeArr)
+//
+let sorted = codeArr.sorted{ (int1, int2) -> Bool in
+return int1 < int2
+
+}
+
+print(sorted)
+var newStr = ""
+
+var reversedDict = [Int: String]()
+
+for (k,v) in letterValues {
+reversedDict[v] = k
+}
+
+for i in sorted {
+newStr.append(reversedDict[i]!)
+}
+
+print(newStr)
+```
 
 
-## Question 4
+## Question 4 - todo
 
 Given an Array of Arrays of Ints, write a function that returns the Array of Ints with the largest sum:
 
@@ -109,27 +195,53 @@ Input: [[2,4,1],[3,0],[9,3]]
 Output: [9,3]
 ```
 
-## Question 5
+## Question 5 - done
 
 ```swift
 struct Receipt {
-  let storeName: String
-  let items: [ReceiptItem]
+let storeName: String
+let items: [ReceiptItem]
+
+func totalCost() -> Double{
+var price = [Double]()
+for item in items {
+price.append(item.price)
+}
+return price.reduce(0,+)
+}
 }
 
 struct ReceiptItem {
-  let name: String
-  let price: Double
+let name: String
+let price: Double
 }
+
+
 ```
 
 a. Given the structs above, add a method to `Receipt` that returns the total cost of all items
 
 b. Write a function that takes in an array of `Receipts` and returns an array of `Receipts` that match a given store name
 
-c. Write a function that takes in an array of `Receipts` and returns an array of those receipts sorted by price
+```func sameNames(reciept: [Receipt], storename: String) -> [Receipt] {
+let returnArray = reciept.filter { ($0.storeName == storename)
+}
+return returnArray
+}
 
-## Question 6
+```
+
+c. Write a function that takes in an array of `Receipts` and returns an array of those receipts sorted by price
+```
+func sortedByPrice( ticket: [Receipt]) -> [Receipt]{
+let sortedPrice = ticket.sorted { (ticket1, ticket2) -> Bool in
+return ticket1.totalCost() < ticket2.totalCost()
+}
+return sortedPrice
+}
+```
+
+## Question 6 - done
 
 a. The code below doesn't compile.  Why?  Fix it so that it does compile.
 
@@ -137,7 +249,9 @@ a. The code below doesn't compile.  Why?  Fix it so that it does compile.
 class Giant {
     var name: String
     var weight: Double
-    let homePlanet: String
+    var homePlanet: String
+    
+//changed constant homePlanet into mutable variable
 
     init(name: String, weight: Double, homePlanet: String) {
         self.name = name
@@ -159,25 +273,41 @@ b. Using the Giant class. What will the value of `edgar.name` be after the code 
 let edgar = Giant(name: "Edgar", weight: 520.0, homePlanet: "Earth")
 let jason = edgar
 jason.name = "Jason"
+//because jason is an instance type of edgar and Giant is a class which is a reference type when jason.name is changed so is edgar.name
 ```
 
-## Question 7
+
+## Question 7 - done
 
 ```
 struct BankAccount {
-    var owner: String
-    var balance: Double
-
-    func deposit(_ amount: Double) {
-        balance += amount
-    }
-
-    func withdraw(_ amount: Double) {
-        balance -= amount
-    }
+var owner: String
+var balance: Double
+var deposit: Double
+var withdraw: Double
+private var startingBalance: Double{
+get {
+return balance
 }
-```
+}
 
+mutating func deposit(_ amount: Double) {
+balance += amount
+}
+
+mutating func withdraw(_ amount: Double) {
+balance -= amount
+}
+
+mutating func totalGrowth() -> Double {
+return startingBalance + deposit
+}
+}
+
+
+//code didnt compile because methods were not mutating functions
+```
+ 
 a. Explain why the code above doesn't compile, then fix it.
 
 b. Add a property called `deposits` of type `[Double]` that stores all of the deposits made to the bank account
@@ -186,17 +316,38 @@ c. Add a property called `withdraws` of type `[Double]` that stores all of the w
 
 d. Add a property called `startingBalance`.  Have this property be set to the original balance, and don't allow anyone to change it
 
-e. Add a method called `totalGrowth` that returns a double representing the change in the balance from the starting balance to the current balance
 
-## Question 8
+
+e(TODO). Add a method called `totalGrowth` that returns a double representing the change in the balance from the starting balance to the current balance
+
+## Question 8 - done
 
 ```swift
 enum GameOfThronesHouse: String {
-    case stark, lannister, targaryen, baratheon
+case stark
+case lannister
+case targaryen
+case baratheon
+
+func printString(house: GameOfThronesHouse) {
+switch house {
+case GameOfThronesHouse.stark:
+print("Winter is coming")
+case GameOfThronesHouse.baratheon:
+print("Ours is the Fury")
+case GameOfThronesHouse.lannister:
+print("A Lannister always pays his debts")
+case GameOfThronesHouse.targaryen:
+print("Fire and Blood")
+default:
+" "
 }
+}
+}
+
 ```
 
-a. Write a function that takes an instance of GameOfThronesHouse as input and, using a switch statement, returns the correct house words.
+a. Write a function that takes an instance of GameOfThronesHouse as input and, using a switch statement, returns the correct house words. - DONE
 
 ```
 House Baratheon - Ours is the Fury
@@ -208,9 +359,9 @@ House Targaryen - Fire and Blood
 House Lannister - A Lannister always pays his debts
 ```
 
-b. Move that function to inside the enum as a method
+b. Move that function to inside the enum as a method - DONE
 
-## Question 9
+## Question 9- done
 
 What are the contents of `library1` and `library2`? Explain why.
 
@@ -232,6 +383,8 @@ library1.add(track: "Michelle")
 library1.add(track: "Voodoo Child")
 let library2 = library
 library2.add(track: "Come As You Are")
+
+//the songs added to tracks property "Michelle","Voodoo Child", "Come As You Are" are both in library1 and library 2, because library is an instance of MusicLibrary which is a reference type any changes to library1 will also change its instances.
 ```
 
 ## Question 10
@@ -239,7 +392,7 @@ library2.add(track: "Come As You Are")
 Make a function that takes in an array of strings and returns an array of strings. The function should determine if the string can be typed out using just one row on the keyboard. If the string can be typed out using just one row, that string should be in the returned array.  
 
 ```
-Input: ["Hello", "Alaska", "Dad", "Peace", "Power"]
+
 
 Output: ["Alaska", "Dad", "Power"]
 ```
